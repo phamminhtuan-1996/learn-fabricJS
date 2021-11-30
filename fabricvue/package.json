@@ -1,18 +1,23 @@
 {
-  "name": "fabricvue",
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
-  },
-  "dependencies": {
-    "fabric": "^4.6.0",
-    "vue": "^3.2.16"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^1.9.3",
-    "@vue/cli-plugin-typescript": "~4.5.0",
-    "vite": "^2.6.4"
-  }
+    "name": "fabricvue",
+    "version": "0.0.0",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview"
+    },
+    "dependencies": {
+        "@fortawesome/free-solid-svg-icons": "^5.15.4",
+        "ant-design-vue": "^2.2.8",
+        "bootstrap": "^5.1.3",
+        "bootstrap-vue": "^2.21.2",
+        "fabric": "^4.6.0",
+        "vue": "^2.6.14"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^1.9.3",
+        "@vue/cli-plugin-typescript": "~4.5.0",
+        "node-sass": "^6.0.1",
+        "vite": "^2.6.4"
+    }
 }

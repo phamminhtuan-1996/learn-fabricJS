@@ -2,9 +2,10 @@
 
 <template>
   <CanVas />
+  <ControlMenu />
 </template>
 <script lang="ts">
-import CanVas from './components/CanVas.vue'
+import CanVas from './components/CanVas.vue';
 export default {
   setup() {
 
