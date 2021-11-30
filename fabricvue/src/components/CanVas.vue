@@ -3,11 +3,15 @@
     
     <div class="wrap d-flex justify-content-center">
         <canvas ref="canVasSelector" width="500" height="500"></canvas>
-        <ControlMenu @value-opacity="pickValueOpacity"/>
+        <ControlMenu
+        @value-opacity="pickValueOpacity"
+        @value-scale="pickValueScale"
+        @value-blur="pickValueBlur"
+        />
     </div>
 </template>
 <script lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { fabric } from 'fabric';
 import  ControlMenu  from './ControlMenu.vue';
 
@@ -22,15 +26,34 @@ export default {
         const canvasValue = ref();
         const rect = new fabric.Rect({
             fill: 'rgba(255, 0, 0, 1.0)',
-            width: 50,
-            height: 50,
+            width: 150,
+            height: 150,
             top: 10,
             left: 10,
         });
+
         const pickValueOpacity = (value: number) => {
-            console.log(canvasValue.value);
+            const obj = canvasValue.value.getActiveObject();
             valueOpacity.value = value;
-            rect.fill = `rgba(255, 0, 0, ${valueOpacity.value})`;
+            obj.set({
+                opacity: valueOpacity.value,
+            });
+            console.log(obj);
+            canvasValue.value.renderAll();
+        };
+        const pickValueScale = (value: number) => {
+            let obj = canvasValue.value.getActiveObject();
+             obj.set({
+                width: value,
+                height: value
+            });
+            canvasValue.value.renderAll();
+        };
+        const pickValueBlur = (value: number) => {
+            let obj = canvasValue.value.getActiveObject();
+            obj.set({
+                blur: value,
+            });
             canvasValue.value.renderAll();
         }
         onMounted(() => {
@@ -38,7 +61,6 @@ export default {
             canvasValue.value = canvas;
             canvasValue.value.add(rect);
             canvasValue.value.renderAll();
-            console.log(canvasValue.value);
         });
         
         return {
@@ -46,6 +68,8 @@ export default {
             h1,
             valueOpacity,
             pickValueOpacity,
+            pickValueScale,
+            pickValueBlur,
         };
     },
 };
