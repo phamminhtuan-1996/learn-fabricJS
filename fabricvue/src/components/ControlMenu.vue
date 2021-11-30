@@ -13,19 +13,19 @@
 </div>
 </template>
 <script lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
 export default {
-  setup() {
+  setup(props: any, { emit }: any) {
     const inputValue = ref<number>(0);
     const inputValue1 = ref<number>(1);
+
     const handleSlider = (value: number) => {
         inputValue.value = value;
         inputValue1.value = value;
-    }
-    watch(() => inputValue.value, (value: number)=> {
-        console.log(value);
-    });
+        emit('value-opacity', value);
+    };
+
     return {
       inputValue,
       inputValue1,
