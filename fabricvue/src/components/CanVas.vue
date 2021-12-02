@@ -4,13 +4,13 @@
     <div class="wrap d-flex justify-content-center">
         <canvas ref="canVasSelector" width="500" height="500"></canvas>
         <ControlMenu
-        :hasOpenRemove="isRemoveObj"
-        @value-opacity="pickValueOpacity"
-        @value-scale="pickValueScale"
-        @value-blur="pickValueBlur"
-        @add-text-canvas="pickValueText"
-        @delete-obj-select="deleteObj"
-        @create-shape="createShape"
+            :hasOpenRemove="isRemoveObj"
+            @value-opacity="pickValueOpacity"
+            @value-scale="pickValueScale"
+            @value-blur="pickValueBlur"
+            @add-text-canvas="pickValueText"
+            @delete-obj-select="deleteObj"
+            @create-shape="createShape"
         />
     </div>
 </template>
@@ -144,7 +144,7 @@ export default {
             canvasValue.value.on('mouse:dblclick', (e: any) => {
                 toggleButtonRemove(e.target);
                 objTarget.value = e.target;
-            })
+            });
         });
 
         watch(() => checkActionObj.value, () => {
