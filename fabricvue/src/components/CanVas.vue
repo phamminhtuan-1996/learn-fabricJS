@@ -4,7 +4,9 @@
     <div class="wrap d-flex justify-content-center">
         <canvas ref="canVasSelector" width="500" height="500"></canvas>
         <ControlMenu
+            :activeKeyAction="activeKeytab"
             :hasOpenRemove="isRemoveObj"
+            :onDrop="dropEvent"
             @value-opacity="pickValueOpacity"
             @value-scale="pickValueScale"
             @value-blur="pickValueBlur"
@@ -15,7 +17,7 @@
     </div>
 </template>
 <script lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { fabric } from 'fabric';
 import  ControlMenu  from './ControlMenu.vue';
 
@@ -31,6 +33,7 @@ export default {
         const checkActionObj = ref(false);
         const isRemoveObj = ref(true);
         const objTarget = ref();
+        const activeKeytab = ref<number>(1);
         const rect = new fabric.Rect({
             fill: 'rgba(255, 0, 0, 1.0)',
             width: 150,
@@ -90,7 +93,6 @@ export default {
                         top: 10,
                         left: 10,
                     });
-                    console.log(square)
                     canvasValue.value.add(square);
                     canvasValue.value.renderAll();
                     break;
@@ -113,7 +115,6 @@ export default {
                         fill:'#f39c12'
                     });
                     circle.dirty = true;
-                    console.log(circle);
                     canvasValue.value.add(circle);
                     canvasValue.value.renderAll();
                     break;
@@ -136,6 +137,13 @@ export default {
             } 
             
         }
+        const handleActiveTab = (value: number) => {
+            activeKeytab.value = value;
+        }
+        const dropEvent = (value: any) => {
+            console.log(value);
+        }
+
         onMounted(() => {
             const canvas = new fabric.Canvas(canVasSelector.value);
             canvasValue.value = canvas;
@@ -146,11 +154,6 @@ export default {
                 objTarget.value = e.target;
             });
         });
-
-        watch(() => checkActionObj.value, () => {
-            console.log(canvasValue.value);
-            console.log(canvasValue.value._objects);
-        });
         
         return {
             canVasSelector,
@@ -158,6 +161,7 @@ export default {
             valueOpacity,
             isRemoveObj,
             objTarget,
+            activeKeytab,
 
             pickValueOpacity,
             pickValueScale,
@@ -165,6 +169,8 @@ export default {
             pickValueText,
             deleteObj,
             createShape,
+            handleActiveTab,
+            dropEvent,
         };
     },
 };
