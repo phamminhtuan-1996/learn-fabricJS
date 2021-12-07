@@ -152,8 +152,8 @@ export default {
         console.log()
         emit('change-index-tab', item);
     }
-    const selectObject = () => {
-        emit('active-object-value');
+    const selectObject = (item: any) => {
+        emit('active-object-value', item);
     }
     const groupForObj = () => {
         emit('group-for-object');
