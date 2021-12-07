@@ -1,6 +1,6 @@
 <template>
 <div class="menu-control d-flex flex-column card p-4">
-    <a-tabs v-model:activeKey="activeKey">
+    <a-tabs v-model:activeKey="activeKey" @change="changeTabIndex">
          <a-tab-pane key="1" tab="Menu Control">
             <h3 class="text-uppercase text-start">opacity</h3>
             <a-row> 
@@ -50,11 +50,11 @@
                     </a-row>
                 </a-col>
                 <a-col :span="24">
-                    <a-button class="w-100" type="primary" danger :disabled="hasOpenRemove" @click="removeObj"><i class="fas fa-trash"></i></a-button>
+                    <a-button class="w-100" type="primary" @click="groupForObj"><i class="far fa-object-group"></i></a-button>
                 </a-col>
             </a-row>
          </a-tab-pane>
-         <a-tab-pane key="2" tab="resources" @click="indexTabMenu">
+         <a-tab-pane key="2" tab="resources">
             <a-row :gutter="[16,16]">
                 <a-col :span="8" v-for="(itemn, index) in 6" :key='index'>
                     <draggable v-model="myArray" group="people" @start="drag=true" @end="drag=false">
@@ -62,6 +62,19 @@
                     </draggable>
                 </a-col>
             </a-row>
+         </a-tab-pane>
+         <a-tab-pane key="3" tab="layer" class="d-flex flex-column">
+            <div
+                class="layer-item w-100 d-flex justify-content-between align-items-center my-2"
+                v-for="(item, index) in listLayer" :key="index"
+                @click="selectObject(item)"
+             >
+             <a-button>
+                 <span>{{ item.text || item.fill }}</span>
+             </a-button>
+             <i class="fas fa-folder-minus" @click="unGroupObj"></i>
+              <i class="fas fa-trash" @click="removeObj(item)"></i>
+              </div>
          </a-tab-pane>
     </a-tabs>
 </div>
@@ -79,9 +92,13 @@ export default {
             type: Boolean,
             default: true
         },
-        activeKeyAction: {
-            type: Number,
-            default: 1
+        listLayer: {
+            type: Object,
+            required: true
+        },
+        isActionCanvas: {
+            type: Boolean,
+            required: true
         }
     },
   setup(props: any, { emit }: any) {
@@ -92,6 +109,7 @@ export default {
     const valueTextObj = ref<string>('');
     const isShowShape = ref<boolean>(false);
     const imgDrag = ref<HTMLDivElement>();
+    const layerList = ref(props.listLayer);
     const shapeList = ref<any[]>([
         { shape: 'fa-square', value: 'square' },
         { shape: 'fa-caret-up fs-3',  value: 'triangle' },
@@ -99,7 +117,7 @@ export default {
         { shape: 'fa-star',  value: 'star' },
     ]);
     const activeKey = ref('1');
-
+    const listObjectsLayer = ref<any[]>([]);
     const handleSlider = (value: number) => {
         inputValue.value = value;
         inputValue1.value = value;
@@ -118,8 +136,8 @@ export default {
       emit('add-text-canvas', valueTextObj.value);
       valueTextObj.value = '';
     };
-    const removeObj = () => {
-         emit('delete-obj-select');
+    const removeObj = (item: any) => {
+         emit('delete-obj-select', item);
     }
     const toggleListShape = () => {
         isShowShape.value = !isShowShape.value;
@@ -128,15 +146,32 @@ export default {
          emit('create-shape', value);
     }
     const drag = (event: any) => {
-        console.log(event);
+        console.log('drag', event);
     } 
+    const changeTabIndex = (item: any) => {
+        console.log()
+        emit('change-index-tab', item);
+    }
+    const selectObject = () => {
+        emit('active-object-value');
+    }
+    const groupForObj = () => {
+        emit('group-for-object');
+    }
+    const unGroupObj = () => {
+        emit('ungrou-for-object');
+    }
     watch(() => props.hasOpenRemove, (value: boolean) => {
         console.log('da doi dieu kien', value);
         console.log('activeKey = ', activeKey.value);
         if(activeKey.value === '2' && !value) {
             activeKey.value = '1';
         }
-
+    });
+    watch(() => props.isActionCanvas, () => {
+       setTimeout(() => {
+            console.log('list layer control menu', props.listLayer);
+       }, 500);
     });
     return {
       inputValue,
@@ -147,7 +182,9 @@ export default {
       isShowShape,
       shapeList,
       imgDrag,
+      layerList,
       activeKey,
+      listObjectsLayer,
 
       handleSlider,
       handleSliderScale,
@@ -157,6 +194,10 @@ export default {
       toggleListShape,
       selectCreateShape,
       drag,
+      changeTabIndex,
+      selectObject,
+      groupForObj,
+      unGroupObj,
     };
   },
 };

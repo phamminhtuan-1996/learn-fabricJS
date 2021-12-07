@@ -4,20 +4,25 @@
     <div class="wrap d-flex justify-content-center">
         <canvas ref="canVasSelector" width="500" height="500"></canvas>
         <ControlMenu
-            :activeKeyAction="activeKeytab"
             :hasOpenRemove="isRemoveObj"
+            :listLayer="layerList"
             :onDrop="dropEvent"
+            :isActionCanvas="hasActionCanvas"
             @value-opacity="pickValueOpacity"
             @value-scale="pickValueScale"
             @value-blur="pickValueBlur"
             @add-text-canvas="pickValueText"
             @delete-obj-select="deleteObj"
             @create-shape="createShape"
+            @change-index-tab="indexTabActive"
+            @active-object-value="selectObjectHandle"
+            @group-for-object="groupObjActive"
+            @ungrou-for-object="unGroupObjActivee"
         />
     </div>
 </template>
 <script lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { fabric } from 'fabric';
 import  ControlMenu  from './ControlMenu.vue';
 
@@ -33,7 +38,8 @@ export default {
         const checkActionObj = ref(false);
         const isRemoveObj = ref(true);
         const objTarget = ref();
-        const activeKeytab = ref<number>(1);
+        const layerList = ref<any[]>([]);
+        const hasActionCanvas = ref(false);
         const rect = new fabric.Rect({
             fill: 'rgba(255, 0, 0, 1.0)',
             width: 150,
@@ -71,6 +77,9 @@ export default {
             canvasValue.value.add(createText);
             canvasValue.value.renderAll();
             checkActionObj.value = !checkActionObj.value;
+            layerList.value = canvasValue.value._objects
+            console.log(layerList.value);
+            hasActionCanvas.value = !hasActionCanvas.value;
         }
         const toggleButtonRemove = (value: any) => {
             if(value) {
@@ -79,8 +88,8 @@ export default {
                 isRemoveObj.value = true;
             }
         }
-        const deleteObj = () => {
-            canvasValue.value.remove(objTarget.value);
+        const deleteObj = (item: any) => {
+            canvasValue.value.remove(item);
             isRemoveObj.value = true;
         }
         const createShape = (value: string) => {
@@ -135,21 +144,39 @@ export default {
                     canvasValue.value.renderAll();
                     break;
             } 
-            
-        }
-        const handleActiveTab = (value: number) => {
-            activeKeytab.value = value;
+            layerList.value = canvasValue.value._objects;
+            console.log(layerList.value);
+            hasActionCanvas.value = !hasActionCanvas.value;
         }
         const dropEvent = (value: any) => {
             console.log(value);
         }
-
+        const indexTabActive = (value: number) => {
+            if (value == 3) {
+                layerList.value = canvasValue.value._objects;
+                hasActionCanvas.value = !hasActionCanvas.value;
+                console.log('indexTabActive canvas', layerList.value);
+            }
+        }
+        const selectObjectHandle = (value: any) => {
+            canvasValue.value._activeObject = value;
+            canvasValue.value.renderAll();
+        }
+        const groupObjActive = () => {
+            canvasValue.value.getActiveObject().toGroup();
+            canvasValue.value.renderAll();
+        }
+        const unGroupObjActivee = () => {
+            canvasValue.value.getActiveObject().toActiveSelection();
+            canvasValue.value.renderAll();
+        }
         onMounted(() => {
             const canvas = new fabric.Canvas(canVasSelector.value);
             canvasValue.value = canvas;
             canvasValue.value.add(rect);
             canvasValue.value.renderAll();
             canvasValue.value.on('mouse:dblclick', (e: any) => {
+                console.log('canvasValue dblclick', canvasValue.value);
                 toggleButtonRemove(e.target);
                 objTarget.value = e.target;
             });
@@ -161,7 +188,8 @@ export default {
             valueOpacity,
             isRemoveObj,
             objTarget,
-            activeKeytab,
+            layerList,
+            hasActionCanvas,
 
             pickValueOpacity,
             pickValueScale,
@@ -169,8 +197,11 @@ export default {
             pickValueText,
             deleteObj,
             createShape,
-            handleActiveTab,
             dropEvent,
+            indexTabActive,
+            selectObjectHandle,
+            groupObjActive,
+            unGroupObjActivee,
         };
     },
 };
