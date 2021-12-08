@@ -67,7 +67,7 @@ export default {
         const pickValueBlur = (value: number) => {
             let obj = canvasValue.value.getActiveObject();
             obj.set({
-                blur: value,
+                angle: value,
             });
             canvasValue.value.renderAll();
         }
@@ -89,6 +89,7 @@ export default {
             }
         }
         const deleteObj = (item: any) => {
+            canvasValue.value.clear();
             canvasValue.value.remove(item);
             isRemoveObj.value = true;
         }

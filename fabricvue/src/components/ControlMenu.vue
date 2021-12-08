@@ -20,13 +20,13 @@
                     <a-input-number v-model:value="inputValue2" :min="50" :max="150" style="margin-left: 16px" @change="handleSliderScale"/>
                 </a-col>
             </a-row>
-            <h3 class="text-uppercase text-start">blur</h3>
+            <h3 class="text-uppercase text-start">rotate</h3>
             <a-row> 
                 <a-col :span="12">
-                    <a-slider v-model:value="inputValue3" :min="1" :max="70" @change="handleSliderBlur" />
+                    <a-slider v-model:value="inputValue3" :min="1" :max="360" @change="handleSliderBlur" />
                 </a-col>
                 <a-col :span="4">
-                    <a-input-number v-model:value="inputValue3" :min="1" :max="70" style="margin-left: 16px" @change="handleSliderBlur"/>
+                    <a-input-number v-model:value="inputValue3" :min="1" :max="360" style="margin-left: 16px" @change="handleSliderBlur"/>
                 </a-col>
             </a-row>
             <h3 class="text-uppercase text-start">add text</h3>
