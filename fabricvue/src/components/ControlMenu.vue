@@ -57,9 +57,7 @@
          <a-tab-pane key="2" tab="resources">
             <a-row :gutter="[16,16]">
                 <a-col :span="8" v-for="(itemn, index) in 6" :key='index'>
-                    <draggable v-model="myArray" group="people" @start="drag=true" @end="drag=false">
-                        <img ref="imgDrag" class="w-100" :draggable="true" :ondragstart="drag($event)" src="https://i.pinimg.com/564x/53/b4/81/53b48189e18cf1504a27a39d7b66a4d0.jpg" alt="">
-                    </draggable>
+                    <img ref="imgDrag" class="w-100" :draggable="true" @dragstart="drag($event, 'https://i.pinimg.com/564x/53/b4/81/53b48189e18cf1504a27a39d7b66a4d0.jpg')" src="https://i.pinimg.com/564x/53/b4/81/53b48189e18cf1504a27a39d7b66a4d0.jpg" alt="">
                 </a-col>
             </a-row>
          </a-tab-pane>
@@ -145,8 +143,10 @@ export default {
     const selectCreateShape = (value: string) => {
          emit('create-shape', value);
     }
-    const drag = (event: any) => {
-        console.log('drag', event);
+    const drag = (event: any, img: string) => {
+        event.dataTransfer.dropEffect = 'move'
+        event.dataTransfer.effectAllowed = 'move'
+        event.dataTransfer.setData('itemID', img);
     } 
     const changeTabIndex = (item: any) => {
         console.log()
@@ -161,6 +161,10 @@ export default {
     const unGroupObj = () => {
         emit('ungrou-for-object');
     }
+    onMounted(() => {
+        const imageQuery = imgDrag.value?.querySelector('img');
+        console.log('imageQuery', imageQuery);
+    });
     watch(() => props.hasOpenRemove, (value: boolean) => {
         console.log('da doi dieu kien', value);
         console.log('activeKey = ', activeKey.value);

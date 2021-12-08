@@ -171,6 +171,23 @@ export default {
             canvasValue.value.getActiveObject().toActiveSelection();
             canvasValue.value.renderAll();
         }
+        const onDrop = (e: any) => {
+            console.log('onDrop', e);
+        }
+        const addImage2 = (img: string) => {
+            return new Promise((resolve) => {
+                fabric.Image.fromURL(img, (myImg) => {
+                    const img1 = myImg;
+                    resolve(img1);
+                });
+            });
+        }
+        const newImage = async (img: string) => {
+            const fabricImage = await addImage2(img);
+            canvasValue.value.add(fabricImage);
+            canvasValue.value.renderAll();
+        }
+        
         onMounted(() => {
             const canvas = new fabric.Canvas(canVasSelector.value);
             canvasValue.value = canvas;
@@ -180,6 +197,11 @@ export default {
                 console.log('canvasValue dblclick', canvasValue.value);
                 toggleButtonRemove(e.target);
                 objTarget.value = e.target;
+            });
+            canvasValue.value.on('drop', (event: any) => {
+                const itemID = event.e.dataTransfer.getData('itemID');
+                newImage(itemID);
+
             });
         });
         
@@ -203,6 +225,7 @@ export default {
             selectObjectHandle,
             groupObjActive,
             unGroupObjActivee,
+            onDrop,
         };
     },
 };
